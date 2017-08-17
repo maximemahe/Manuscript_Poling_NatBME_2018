@@ -2,14 +2,14 @@
 
 Holly M. Poling<sup>1</sup>, David Wu<sup>2</sup>, Nicole Brown<sup>1</sup>, Michael Baker<sup>3</sup>, Taylor A. Horras<sup>1</sup>, Nhan Huynh<sup>4+</sup>, James C.Y. Dunn<sup>4+,5</sup>, Simon P. Hogan<sup>2</sup>, James M. Wells<sup>6,7</sup>, Michael A. Helmrath<sup>1</sup> and Maxime M. Mahe<sup>1,8*</sup>
 
-<sup>1</sup> Division of Pediatric General and Thoracic Surgery, Cincinnati Children’s Hospital Medical Center, Cincinnati, OH 45229 USA
-<sup>2</sup> Department of Allergy and Immunology, Cincinnati Children’s Hospital Medical Center, Cincinnati, OH 45229 USA
-<sup>3</sup> Department of Pathology, Dartmouth-Hitchcock Medical Center, Lebanon, NH 03766 USA
-<sup>4</sup> Department of Bioengineering, Department of Surgery, University of California, Los Angeles, Los Angeles, CA 90095 USA
-<sup>5</sup> Department of Surgery - Pediatric Surgery, Department of Bioengineering, Stanford University, 300 Pasteur Drive, Always M116, Stanford, CA 94305 USA.
-<sup>6</sup> Division of Developmental Biology, Cincinnati Children’s Hospital Medical Center, Cincinnati, OH 45229 USA
-<sup>7</sup> Division of Endocrinology, Cincinnati Children's Hospital Medical Center, 3333 Burnet Avenue, Cincinnati, OH 45229 USA.
-<sup>8</sup> Inserm 1235 Unit, University of Nantes, 1 Rue Gaston Veil, 44035 Nantes Cedex 1, France
+<sup>1</sup> Division of Pediatric General and Thoracic Surgery, Cincinnati Children’s Hospital Medical Center, Cincinnati, OH 45229 USA;
+<sup>2</sup> Department of Allergy and Immunology, Cincinnati Children’s Hospital Medical Center, Cincinnati, OH 45229 USA;
+<sup>3</sup> Department of Pathology, Dartmouth-Hitchcock Medical Center, Lebanon, NH 03766 USA;
+<sup>4</sup> Department of Bioengineering, Department of Surgery, University of California, Los Angeles, Los Angeles, CA 90095 USA;
+<sup>5</sup> Department of Surgery - Pediatric Surgery, Department of Bioengineering, Stanford University, 300 Pasteur Drive, Always M116, Stanford, CA 94305 USA;
+<sup>6</sup> Division of Developmental Biology, Cincinnati Children’s Hospital Medical Center, Cincinnati, OH 45229 USA;
+<sup>7</sup> Division of Endocrinology, Cincinnati Children's Hospital Medical Center, 3333 Burnet Avenue, Cincinnati, OH 45229 USA;
+<sup>8</sup> Inserm 1235 Unit, University of Nantes, 1 Rue Gaston Veil, 44035 Nantes Cedex 1, France;
 <sup>+</sup> previous affiliation
 
 <sup>*</sup>**Corresponding Author:** maxime.mahe@cchmc.org
