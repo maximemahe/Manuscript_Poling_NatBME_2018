@@ -1,0 +1,81 @@
+### **RNA sequencing bioinformatics**
+
+#### *Pre-processing*
+
+Data pre-processing was performed in Galaxy public server (https://usegalaxy.org). fastq datasets were encoded in Phred+33 to fastqsanger under the attributes for each dataset (FASTQ Groomer, Galaxy v1.0.4). Read quality was assessed using FastQC (Galaxy, v0.67). Adapter and low quality (< 20) sequences were removed using Trimmomatic (SLIDINGWINDOW) (Galaxy v0.32.3). Reads were mapped against the human genome GRCh37\Hg19 using Tophat2/Bowtie2 with default settings (Galaxy v2.1.0). The number of reads uniquely mapping to each gene was counted using featureCounts (Galaxy v1.4.6.p5) using the Illumina iGenomes annotation file. 
+(http://support.illumina.com/sequencing/sequencing_software/igenome.ilmn) 
+
+Alternatively, each sample was independently processed with Cufflinks in order to generate an initial transcriptome. We used the Cuffmerge tool to merge the private transcriptomes into a single reference, and at the same time annotated known genes and extended partial transcripts. This common transcriptome was used in a second pass with Cufflinks to quantify each transcript and gene (known or novel) in each sample. The reference annotation used was based on the UCSC knownGenes table.
+
+#### *Analysis of RNA-seq data*
+
+RNA-seq analysis was performed using Strand NGS 2.9 software (Strand Life Sciences). Count tables generated in Galaxy were processed and normalized using the DESeq2 package within the Strand NGS 2.9 R console. ANOVA and moderated t-Test were used to performed statistical analysis amongst samples and between groups. Functional enrichment analysis was performed in the ToppGene suite (https://toppgene.cchmc.org). Plots were generated using ggplot2 (v2.2.1) and GOplot (v1.02) packages in Rstudio (v1.0.14).
+
+#### *Analysis of RNA-seq data with publicly available datasets*
+
+Publicly available datasets of fetal and adult full thickness intestinal tissues were downloaded from EBI-AE and NCBI-GEO databases using the Galaxy public server (see table below). Datasets were selected upon RNA extraction, library preparation methods and sequencing platform (Illumina HiSeq). Only forward reads were used from paired-end files. Datasets were encoded to fastqsanger and read quality was assessed using FastQC (Galaxy, v0.67). Adapter and low quality (< 20) sequences were removed using Trimmomatic (SLIDINGWINDOW). Reads were mapped against the human genome GRChb37\Hg19 using HISAT2 with default settings (Galaxy v2.0.5.1). Count tables were generated in Galaxy using featureCounts and the Illumina iGenomes annotation file. The count matrix was processed in R (v3.4.1) using the functions exported by the pcaExplorer package for a standalone usage. Briefly, the count matrix was transformed and normalized using a variance stabilizing transformation (VST) to the count data. We visualized the sample PCA using the pcaplot function. The gene with the highest loadings for each principal component were extracted and a functional enrichment analysis using the limmaquickpca2go routine provided by the limma package was performed. 
+
+The accession number for data generated for this paper is ArrayExpress: **E-MTAB-6017** and includes the transplanted HIO, with or without lengthening device, the human adult and infant data related to Figure 3a-e and supplementary Figure 2. 
+
+The additional RNA-seq public datasets, related to Figure 3f and supplementary Figure 2a are referenced below and include HIOs derived from H1 and H9 ES cell lines, transplanted HIOs, Fetal, newborn and adult small intestine were downloaded from public databases (Table below).
+
+----------
+
+| Sample Label | Sample Description                            | Source   | Database #  | 
+|--------------|-----------------------------------------------|----------|-------------| 
+| Fetal_SI_2   | Fetal Intestine, Small; RNA.RS18147           | NCBI-GEO | GSE18927    | 
+| Fetal_SI_3   | Fetal Intestine, Small; RNA.RS18148           | NCBI-GEO | GSE18927    | 
+| Fetal_SI_4   | Fetal Intestine, Small; RNA.RS18763           | NCBI-GEO | GSE18927    | 
+| Fetal_SI_5   | Fetal Intestine, Small; RNA.RS18765           | NCBI-GEO | GSE18927    | 
+| Fetal_SI_6   | Fetal Intestine, Small; RNA.RS18767           | NCBI-GEO | GSE18927    | 
+| Newborn_SI_1 | Control patient 1                             | NCBI-GEO | GSE64801    | 
+| Newborn_SI_2 | Control patient 2                             | NCBI-GEO | GSE64801    | 
+| Newborn_SI_3 | Control patient 3                             | NCBI-GEO | GSE64801    | 
+| Newborn_SI_4 | Control patient 4                             | NCBI-GEO | GSE64801    | 
+| Newborn_SI_5 | Control patient 5                             | NCBI-GEO | GSE64801    | 
+| Child_SI_1   | Small Bowel Cells; polyA-RNA-seq_STL001SB_r1a | NCBI-GEO | GSE16256    | 
+| Adult_SI_2   | Small Bowel Cells; polyA-RNA-seq_STL002SB_r1a | NCBI-GEO | GSE16256    | 
+| Adult_SI_3   | smallintestine_4a                             | EBI-AE   | E-MTAB-1733 | 
+| Adult_SI_4   | smallintestine_4b                             | EBI-AE   | E-MTAB-1733 | 
+| Adult_SI_5   | smallintestine_4c                             | EBI-AE   | E-MTAB-1733 | 
+| Adult_DUO_1  | duodenum_4b                                   | EBI-AE   | E-MTAB-1733 | 
+| Adult_DUO_2  | duodenum_4c                                   | EBI-AE   | E-MTAB-1733 | 
+| H9_HIO_1     | E-MTAB-3158:HIO1                              | EBI-AE   | E-MTAB-3158 | 
+| H9_HIO_2     | E-MTAB-3158:HIO2                              | EBI-AE   | E-MTAB-3158 | 
+| H9_HIO_3     | E-MTAB-3158:HIO3                              | EBI-AE   | E-MTAB-3158 | 
+| H1_HIO_1     | HIO_1                                         | NCBI-GEO | GSE84666    | 
+| H1_HIO_2     | HIO_2                                         | NCBI-GEO | GSE84666    | 
+| H1_HIO_3     | HIO_3                                         | NCBI-GEO | GSE84666    | 
+| H1_HIO_4     | EGF1                                          | EBI-AE   | E-MTAB-5658 | 
+| H1_HIO_5     | EGF2                                          | EBI-AE   | E-MTAB-5658 | 
+| tHIO_1       | EGFTXP1                                       | EBI-AE   | E-MTAB-5658 | 
+| tHIO_2       | EGFTXP2                                       | EBI-AE   | E-MTAB-5658 | 
+| tHIO_3       | EGFTXP3                                       | EBI-AE   | E-MTAB-5658 | 
+
+
+----------
+### **Figures**
+
+#### *Principal component analysis of count matrix related to Figure 3a*
+    #Principal component analysis
+
+#### *Venn diagrams related to figure 3b,d and supplemental figure 2b*
+    #Venn
+
+#### *Correlation matrix related to supplemental figure 2a*
+    #Corrmat
+
+#### *GOplot analysis related to Figure 3c,e*
+    #GOplot
+   
+#### *Data visualization with pcaExplorer*
+    #pcaExplorer
+
+#### *Principal component analysis of count matrix related to Figure 3f*
+    #Principal component analysis
+    
+#### *PCA hi-loadings genes related to supplemental figure 3a
+    #hi_loadings
+        
+#### *limmaquickpca2go analysis related to supplemental figure 3b,c
+    #limmaquickpca2go
