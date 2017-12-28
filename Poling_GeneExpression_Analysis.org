@@ -1,0 +1,120 @@
+* RNA-Seq analysis
+
+** PCA analysis
+#+begin_src R :session *R* :eval yes :exports code :tangle ./src/PCA_analysis.R
+#Used package
+library(ggplot2)
+
+#Open filtered counts table
+count = read.table("FilteredValues.txt", header=T, row.names = 1, sep="\t", check.names = FALSE)
+
+#Group setup
+Adult <- grep("Adult",colnames(count),ignore.case=T)
+Infant <- grep("Infant",colnames(count),ignore.case=T)
+Spring <- grep("Spring",colnames(count),ignore.case=T)
+tHIO <- grep("tHIO",colnames(count),ignore.case=T)
+group <- as.factor(c(rep("Adult",times=length(Adult)), rep("Infant",times=length(Infant)), rep("Spring",times=length(Spring)), rep("tHIO",times=length(tHIO))))
+
+#Compute PCA
+pca <- prcomp(t(count),scale=TRUE,center=TRUE)
+scores <- data.frame(colnames(count), pca$x[,1:ncol(pca$x)],group)
+
+#Get proportion of variance explained per component
+summary(pca) #Add PC1 and PC2 proportion of variance explained to PCA axis titles
+
+#Set plot theme
+theme <- theme(legend.position="bottom",
+        legend.title=element_blank(),
+        legend.background = element_rect(fill="white", size=.5, linetype="dotted"),
+        panel.background = element_rect(fill = "white", colour = "black"),
+        panel.grid.minor=element_blank(),
+        panel.grid.major=element_blank())
+
+#Plot PCA with pre-defined theme
+qplot(x=PC1, y=PC2, data=scores) +
+        theme +
+        scale_fill_manual(values=c("#F5EA14", "#FBF7C9", "#8A4B9C", "#E5CBE2")) +
+        geom_point(shape=21,aes(fill=factor(group)), size=5)  +
+        xlim(-150, 150) +
+        ylim(-150, 150) +
+        labs(x = "PC1 (36.14%)", y = "PC2 (17.33%)")
+
+ggsave("PCA_Plot.png", plot = last_plot(), width = 10, height = 10, units = "cm",
+          dpi = 300)
+#+END_SRC
+[[./Data/gene_analysis/PCA_Plot.png]]
+
+** Clustering and correlation analysis
+#+begin_src R :session *R* :eval yes :exports code :tangle ./src/Correlation_analysis.R
+#Used packages
+library(ggplot2)
+library(reshape2)
+library(ggdendrogram)
+
+#Open filtered counts table
+cormat <- read.table("CorMatrix.txt", header=T, sep="\t", check.names = FALSE, row.names = 1)
+cormat <- as.matrix(cormat)
+cormat<- round(cormat, 2)
+
+#Get upper triangle of the correlation matrix
+get_upper_tri <- function(cormat){
+    cormat[lower.tri(cormat)]<- NA
+    return(cormat)
+  }
+
+upper_tri <- get_upper_tri(cormat)
+melted_cormat <- melt(upper_tri, na.rm = TRUE)
+
+#Heatmap
+ggheatmap <- ggplot(data = melted_cormat, aes(Var1, Var2, fill = value)) +
+    geom_raster() +
+    scale_fill_gradient2(low = "#712B8D", high = "#F5EA14", mid = "#030203",
+      midpoint = 0.7, limit = c(0.5,1), space = "Lab",name="Coefficient value") +
+    theme_minimal() + # minimal theme
+    theme(axis.text.x = element_blank()) +
+    coord_fixed()
+
+#Add correlation coefficients on the heatmap
+corheatmap <- ggheatmap +
+              geom_text(aes(Var1, Var2, label = value), color = "grey50", size = 3) +
+              theme(
+                    axis.title.x = element_blank(),
+                    axis.title.y = element_blank(),
+                    panel.grid.major = element_blank(),
+                    panel.border = element_blank(),
+                    panel.background = element_blank(),
+                    axis.ticks = element_blank(),
+                    legend.position = c(0.75, 0.1),
+                    legend.direction = "horizontal") +
+                    guides(fill = guide_colorbar(barwidth = 7, barheight = 1,
+                                  title.position = "top", title.hjust = 0.5)) +
+                    labs(title="Spearman correlation matrix")
+
+#Save and export plot
+ggsave("Corr_Plot.png", plot = last_plot(), width = 10, height = 10, units = "cm", dpi = 300)
+
+#Compute dendrogram
+dend <- hclust(dist(cormat), method = "complete")
+dend_plot <- ggdendrogram(dend) +
+            labs(title="Cluster dendrogram")
+ggsave("Dend_Plot.png", plot = dend_plot, width = 10, height = 10, units = "cm", dpi = 300)
+
+#+END_SRC
+[[./Data/gene_analysis/Corr_Plot.png]]
+[[./Data/gene_analysis/Dend_Plot.png]]
+
+* GO Plot (http://wencke.github.io/)
+
+** Biological processes enrichment in tHIO+S compared to tHIO
+#+begin_src R :session *R* :eval yes :exports code :tangle ./src/PCA_analysis.R
+library(GOplot)
+
+#Import gene list and GO enrichment data from toppgene suite
+GO_BP <- read.table("~Data/Meta_analysis/GO_BP_tHIOSvstHIO.txt", sep = "\t", header = TRUE)
+genelist <- read.table("~Data/Meta_analysis/genelist_thiospring-thio.txt", sep = "\t", header = TRUE)
+#Generate the plotting object
+circ <- circle_dat(GO, genelist)
+
+GOCircle(GO, nsub = IDs)
+
+#+END_SRC
