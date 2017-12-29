@@ -1,0 +1,12 @@
+	group	batch
+Spring_1	Spring	2
+Spring_2	Spring	2
+Spring_3	Spring	2
+Spring_4	Spring	2
+tHIO_1	tHIO	2
+tHIO_2	tHIO	2
+tHIO_3	tHIO	2
+Infant_1	Infant	2
+Adult_1	Adult	2
+Adult_2	Adult	2
+Adult_3	Adult	2
