@@ -2,7 +2,7 @@
 library(ggplot2)
 
 #Open filtered counts table
-count = read.table("FilteredValues.txt", header=T, row.names = 1, sep="\t", check.names = FALSE)
+count = read.table("~Data/gene_analysis/FilteredValues.txt", header=T, row.names = 1, sep="\t", check.names = FALSE)
 
 #Group setup
 Adult <- grep("Adult",colnames(count),ignore.case=T)

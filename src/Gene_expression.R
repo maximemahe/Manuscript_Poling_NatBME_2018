@@ -4,7 +4,7 @@ library(pcaExplorer)
 library(DEFormats)
 library(ggplot2)
 
-setwd("~Data/Raw_Counts.txt") # Set working directory
+setwd("~Data/gene_analysis/Raw_Counts.txt") # Set working directory
 count = read.table("Raw_Counts.txt", header=T, row.names = 1, sep="\t", check.names = FALSE) # Open Raw counts from featureCounts routine
 
 #Group setup

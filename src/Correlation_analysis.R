@@ -4,7 +4,7 @@ library(reshape2)
 library(ggdendrogram)
 
 #Open filtered counts table
-cormat <- read.table("CorMatrix.txt", header=T, sep="\t", check.names = FALSE, row.names = 1)
+cormat <- read.table("~Data/gene_analysis/CorMatrix.txt", header=T, sep="\t", check.names = FALSE, row.names = 1)
 cormat <- as.matrix(cormat)
 cormat<- round(cormat, 2)
 

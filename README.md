@@ -1,6 +1,6 @@
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![last update](https://img.shields.io/eclipse-marketplace/last-update/notepad4e.svg)
+![GitHub issue last update](https://img.shields.io/badge/Updated-January%202018-blue.svg)]
 
 **Mechanically Induced Development and Maturation of Human Intestinal Organoids in Vivo**
 
@@ -29,12 +29,12 @@ In both directing and fostering the natural ability of stem cells to self-organi
 **Outline**
 
 This repository contains the following sections :
- :one: [RNA sequencing and bioinformatic methods](Poling_Methods.org)
- :two: [Analysis of RNA-seq data](Poling_GeneExpression_Analysis.org)
- :three: [Meta-analysis of RNA-seq data with publicly available datasets](Poling_Meta_analysis.org)
+ - [RNA sequencing and bioinformatic methods](Poling_Methods.org)
+ - [Analysis of RNA-seq data](Poling_GeneExpression_Analysis.org)
+ - [Meta-analysis of RNA-seq data with publicly available datasets](Poling_Meta_analysis.org)
 
 ----------
 
 **About this repository**
 
-This repository contains datasets and R scripts related to the manuscript "Mechanically Induced Development and Maturation of Human Intestinal Organoids in Vivo". This repository will continue to undergo changes unless noted in this README :simple_smile:
+This repository contains datasets and R scripts related to the manuscript "Mechanically Induced Development and Maturation of Human Intestinal Organoids in Vivo". This repository will continue to undergo changes unless noted in this README.
