@@ -1,6 +1,6 @@
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-![GitHub issue last update](https://img.shields.io/badge/Updated-January%202018-blue.svg)]
+![GitHub issue last update](https://img.shields.io/badge/Updated-January%202018-blue.svg)
 
 **Mechanically Induced Development and Maturation of Human Intestinal Organoids in Vivo**
 
@@ -38,3 +38,5 @@ This repository contains the following sections :
 **About this repository**
 
 This repository contains datasets and R scripts related to the manuscript "Mechanically Induced Development and Maturation of Human Intestinal Organoids in Vivo". This repository will continue to undergo changes unless noted in this README.
+
+The accession number for data generated for this paper is ArrayExpress: **E-MTAB-6017** and includes the transplanted HIO, with or without lengthening device, the human adult and infant data .

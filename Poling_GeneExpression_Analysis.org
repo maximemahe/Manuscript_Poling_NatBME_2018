@@ -192,6 +192,8 @@ GOChord(chord, limit = c(2, 0),
               gene.size = 8,
               space = 0.02)
 ggsave("GOPathway.png", plot = last_plot(), width = 40, height = 45, units = "cm", dpi = 200)
+#+END_SRC
+[[./Data/gene_analysis/GOPathway.png]]
 
 **** Biological processes uniquely enriched in tHIO+S compared to human jejunum
 #+begin_src R :session *R* :eval yes :exports code :tangle ./src/GOplot.R
@@ -212,5 +214,4 @@ GOChord(chord, limit = c(2, 0),
               space = 0.02)
 ggsave("GOtHIOS.png", plot = last_plot(), width = 40, height = 45, units = "cm", dpi = 200)
 #+END_SRC
-[[./Data/gene_analysis/GOPathway.png]]
 [[./Data/gene_analysis/GOtHIOS.png]]
