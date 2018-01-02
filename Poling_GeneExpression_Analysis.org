@@ -173,10 +173,9 @@ head(goquick$PC1$negLoad)
 
 ** GO Plot analysis
 *** (http://wencke.github.io/)
-**** Biological processes enrichment in tHIO+S compared to tHIO
+**** Pathways enriched in tHIO+S compared to tHIO
 #+begin_src R :session *R* :eval yes :exports code :tangle ./src/GOplot.R
 library(GOplot)
-
 #Import gene list and GO enrichment data from toppgene suite
 #Pathways upregulated in tHIO+S
 GO <- read.table("GO-Pathway.txt", sep = "\t", header = TRUE)
@@ -194,6 +193,9 @@ GOChord(chord, limit = c(2, 0),
               space = 0.02)
 ggsave("GOPathway.png", plot = last_plot(), width = 40, height = 45, units = "cm", dpi = 200)
 
+**** Biological processes uniquely enriched in tHIO+S compared to human jejunum
+#+begin_src R :session *R* :eval yes :exports code :tangle ./src/GOplot.R
+library(GOplot)
 #Pathways upregulated in tHIO+S
 GO <- read.table("tHIOS_unique_all.txt", sep = "\t", header = TRUE)
 genelist <- read.table("genelist_tHIOSunique.txt", sep = "\t", header = TRUE)
