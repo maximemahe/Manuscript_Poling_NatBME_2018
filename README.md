@@ -1,3 +1,5 @@
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<meta name="theme-color" content="#ffffff">
 **Mechanically Induced Development and Maturation of Human Intestinal Organoids in Vivo**
 
 Holly M. Poling<sup>1</sup>, David Wu<sup>2</sup>, Nicole Brown<sup>1</sup>, Michael Baker<sup>3</sup>, Taylor A. Horras<sup>1</sup>, Nhan Huynh<sup>4+</sup>, James C.Y. Dunn<sup>4+,5</sup>, Simon P. Hogan<sup>2</sup>, James M. Wells<sup>6,7</sup>, Michael A. Helmrath<sup>1</sup> and Maxime M. Mahe<sup>1,8*</sup>
