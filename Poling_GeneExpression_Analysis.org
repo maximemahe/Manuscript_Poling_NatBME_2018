@@ -104,6 +104,7 @@ ggsave("Dend_Plot.png", plot = dend_plot, width = 10, height = 10, units = "cm",
 [[./Data/gene_analysis/Dend_Plot.png]]
 
 ** Top/Bottom loadings and GO analysis
+*** (https://github.com/federicomarini/pcaExplorer)
 #+begin_src R :session *R* :eval yes :exports code :tangle ./src/Gene_expression_analysis.R
 #Used packages
 library(DESeq2)
@@ -170,18 +171,44 @@ head(goquick$PC1$negLoad)
 [[./Data/gene_analysis/Loadings_PC2.png]]
 [[./Data/gene_analysis/Loadings_PC3.png]]
 
-* GO Plot (http://wencke.github.io/)
-
-** Biological processes enrichment in tHIO+S compared to tHIO
-#+begin_src R :session *R* :eval yes :exports code :tangle ./src/PCA_analysis.R
+** GO Plot analysis
+*** (http://wencke.github.io/)
+**** Biological processes enrichment in tHIO+S compared to tHIO
+#+begin_src R :session *R* :eval yes :exports code :tangle ./src/GOplot.R
 library(GOplot)
 
 #Import gene list and GO enrichment data from toppgene suite
-GO_BP <- read.table("~Data/Meta_analysis/GO_BP_tHIOSvstHIO.txt", sep = "\t", header = TRUE)
-genelist <- read.table("~Data/Meta_analysis/genelist_thiospring-thio.txt", sep = "\t", header = TRUE)
-#Generate the plotting object
+#Pathways upregulated in tHIO+S
+GO <- read.table("GO-Pathway.txt", sep = "\t", header = TRUE)
+genelist <- read.table("genelist_thiospring-thio.txt", sep = "\t", header = TRUE)
 circ <- circle_dat(GO, genelist)
+genes <- read.table("selected_genes.txt", sep = "\t", header = TRUE)
+process <- read.table("selected_process.txt", sep = "\t", header = TRUE)
+process <- as.matrix(process)
+chord <- chord_dat(circ, genes, process)
+GOChord(chord, limit = c(2, 0),
+              gene.order = 'logFC',
+              ribbon.col = c("#F79420", "#FAAF41", "#F7EC33", "#FBF8CD", "#FFFFFF", "#EECDE1", "#6B52A1", "#D94397"),
+              gene.space = 0.25,
+              gene.size = 8,
+              space = 0.02)
+ggsave("GOPathway.png", plot = last_plot(), width = 40, height = 45, units = "cm", dpi = 200)
 
-GOCircle(GO, nsub = IDs)
-
+#Pathways upregulated in tHIO+S
+GO <- read.table("tHIOS_unique_all.txt", sep = "\t", header = TRUE)
+genelist <- read.table("genelist_tHIOSunique.txt", sep = "\t", header = TRUE)
+circ <- circle_dat(GO, genelist)
+genes <- read.table("genes.txt", sep = "\t", header = TRUE)
+process <- read.table("Processes.txt", sep = "\t", header = TRUE)
+process <- as.matrix(process)
+chord <- chord_dat(circ, genes, process)
+GOChord(chord, limit = c(2, 0),
+              gene.order = 'logFC',
+              ribbon.col = c("#F79420", "#FAAF41", "#F7EC33", "#FBF8CD", "#FFFFFF", "#EECDE1", "#6B52A1", "#D94397"),
+              gene.space = 0.25,
+              gene.size = 8,
+              space = 0.02)
+ggsave("GOtHIOS.png", plot = last_plot(), width = 40, height = 45, units = "cm", dpi = 200)
 #+END_SRC
+[[./Data/gene_analysis/GOPathway.png]]
+[[./Data/gene_analysis/GOtHIOS.png]]
