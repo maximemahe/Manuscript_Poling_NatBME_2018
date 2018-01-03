@@ -47,7 +47,7 @@ png('Loadings_PC2.png', width = 800, height = 350)
 hi_loadings(pcaobj, whichpc = 2, topN = 10,annotation = annotation)
 dev.off()
 #Plot and export image for PC3
-png('Loadings_PC2.png', width = 800, height = 350)
+png('Loadings_PC3.png', width = 800, height = 350)
 hi_loadings(pcaobj, whichpc = 3, topN = 10,annotation = annotation)
 dev.off()
 

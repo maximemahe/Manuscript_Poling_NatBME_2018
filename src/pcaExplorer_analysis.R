@@ -1,7 +1,3 @@
-* Meta-analysis
-
-** PCA analysis
-#+begin_src R :session *R* :eval yes :exports code :tangle ./src/pcaExplorer_analysis.R
 #Used packages
 library(DESeq2)
 library(pcaExplorer)
@@ -42,10 +38,7 @@ annotation <- data.frame(gene_name = rownames(dds), row.names = rownames(dds), s
 pcaobj <- prcomp(t(assay(vsd))) #Use VST
 pcascree(pcaobj,type="pev", title="Proportion of explained proportion of variance")
 res_pc <- correlatePCs(pcaobj,colData(dds))
-#+END_SRC
 
-** Plot PCAs using multiple gene tresholds
-#+begin_src R :session *R* :eval yes :exports code :tangle ./src/pcaExplorer_analysis.R
 #Plot PCA (10000 genes) and export image
 png('PCA_10000genes.png', width = 750, height = 600)
 pcaplot(vsd, intgroup = "group", ntop = 10000, returnData = FALSE, pcX = 1, pcY = 2, title = "PCA on 10000 genes", text_labels = FALSE, point_size = 7, ellipse = TRUE, ellipse.prob = 0.95) +
@@ -97,14 +90,7 @@ pcaplot(vsd, intgroup = "group", ntop = 500, returnData = FALSE, pcX = 1, pcY = 
     scale_color_manual(values= c("#F5EA14", "#E6AA22", "#F48220", "#EC268F", "#DD57A4", "#FBF7C9", "#E5CBE2", "#8A4B9C")) +
     geom_point(shape=1, size=7, colour="black")
 dev.off()
-#+END_SRC
-[[./Data/meta_analysis/PCA_500genes.png]]
-[[./Data/meta_analysis/PCA_2500genes.png]]
-[[./Data/meta_analysis/PCA_5000genes.png]]
-[[./Data/meta_analysis/PCA_1000genes.png]]
 
-** Top/Bottom loadings and GO analysis
-#+begin_src R :session *R* :eval yes :exports code :tangle ./src/pcaExplorer_analysis.R
 #Extract top 10 genes per top/bottom loadings in each PCs
 #Fix(hi-loadings) i.e. barplot(geneloadings_extreme, las = 2, col = c(rep("#BD202E",
         topN), rep("#2E368E", topN)), main = paste0(title, "PC",
@@ -132,7 +118,126 @@ goquick <- limmaquickpca2go(vsd,
 head(goquick$PC1$posLoad)
 head(goquick$PC1$negLoad)
 #repeat for each PCs
-#+END_SRC
-[[./Data/meta_analysis/Loadings_PC1.png]]
-[[./Data/meta_analysis/Loadings_PC2.png]]
-[[./Data/meta_analysis/Loadings_PC3.png]]
+
+
+
+
+
+
+***********************************************************************************************
+#Call libraries
+library(monocle)
+library (reshape2)
+library (plyr)
+
+#Import datasets (Count matrix; Gene annotation and Phenodata)
+count_matrix <- read.table("count.txt", sep = "\t", header = TRUE, row.names = 1)
+gene_ann <- read.table("annotation.txt", sep = "\t", header = TRUE, row.names = 1)
+sample_sheet <- read.table("pheno.txt", sep = "\t", header = TRUE, row.names = 1)
+
+#Create CellDataSet object
+pd <- new("AnnotatedDataFrame", data = sample_sheet)
+fd <- new("AnnotatedDataFrame", data = gene_ann)
+ATLAS <- new("CellDataSet",
+        exprs = as.matrix(count_matrix, "sparseMatrix"),
+        lowerDetectionLimit = 0.5,
+        phenoData = pd, featureData = fd,
+        expressionFamily=negbinomial.size()) #Use negative binomial with fixed variance function
+
+#Estimate size factors
+ATLAS <- estimateSizeFactors(ATLAS)
+ATLAS <- estimateDispersions(ATLAS)
+
+ATLAS <- detectGenes(ATLAS, min_expr = 50)
+print(head(fData(ATLAS)))
+expressed_genes <- row.names(subset(fData(ATLAS),
+    num_cells_expressed >= 4))
+
+# Log-transform each value in the expression matrix.
+L <- log(exprs(ATLAS[expressed_genes,]))
+
+# Standardize each gene, so that they are all on the same scale,
+# Then melt the data with plyr so we can plot it easily
+melted_dens_df <- melt(Matrix::t(scale(Matrix::t(L))))
+
+# Plot the distribution of the standardized gene expression values.
+qplot(value, geom = "density", data = melted_dens_df) +
+stat_function(fun = dnorm, size = 0.5, color = 'red') +
+xlab("Standardized log(Counts)") +
+ylab("Density")
+
+
+
+
+LGR5_id <- row.names(subset(fData(ATLAS), gene_short_name == "LGR5"))
+OLFM4_id <- row.names(subset(fData(ATLAS), gene_short_name == "OLFM4"))
+
+cth <- newCellTypeHierarchy()
+cth <- addCellType(cth, "Fetal Tissue",
+       classify_func = function(x) { x[LGR5_id,] >= 800 })
+cth <- addCellType(cth, "Adult Tissue",
+       classify_func = function(x)
+       { x[LGR5_id,] < 8000 & x[OLFM4_id,] > 1000 })
+
+ATLAS <- classifyCells(ATLAS, cth, 0.1)
+table(pData(ATLAS)$CellType)
+
+pie <- ggplot(pData(ATLAS),
+aes(x = factor(1), fill = factor(CellType))) + geom_bar(width = 1)
+pie + coord_polar(theta = "y") +
+theme(axis.title.x = element_blank(), axis.title.y = element_blank())
+
+
+marker_diff <- markerDiffTable(ATLAS[expressed_genes,],
+            cth,
+            residualModelFormulaStr = "~type + num_genes_expressed",
+            cores = 1)
+
+candidate_clustering_genes <- row.names(subset(marker_diff, qval < 0.5))
+marker_spec <- calculateMarkerSpecificity(ATLAS[candidate_clustering_genes,], cth)
+head(selectTopMarkers(marker_spec, 3))
+
+
+semisup_clustering_genes <- unique(selectTopMarkers(marker_spec, 500)$gene_id)
+ATLAS <- setOrderingFilter(ATLAS, semisup_clustering_genes)
+plot_ordering_genes(ATLAS)
+
+ATLAS <- reduceDimension(ATLAS, max_components = 2, num_dim = 3,
+  norm_method = 'log',
+  reduction_method = 'tSNE',
+  residualModelFormulaStr = "~type + num_genes_expressed",
+  verbose = T)
+ATLAS <- clusterCells(ATLAS, num_clusters = 7)
+plot_cell_clusters(ATLAS, 1, 2, color = "group")
+
+
+
+
+###########################################################################################
+
+semisup_clustering_genes <- unique(selectTopMarkers(marker_spec, 500)$gene_id)
+HSMM <- setOrderingFilter(HSMM, semisup_clustering_genes)
+plot_ordering_genes(HSMM)
+
+
+
+
+
+
+
+
+
+
+
+
+
+disp_table <- dispersionTable(ATLAS)
+unsup_clustering_genes <- subset(disp_table, mean_expression >= 200)
+ATLAS <- setOrderingFilter(ATLAS, unsup_clustering_genes$gene_id)
+plot_ordering_genes(ATLAS)
+
+ATLAS <- reduceDimension(ATLAS, max_components = 2, num_dim = 6,
+                reduction_method = 'tSNE', verbose = T)
+ATLAS <- clusterCells(ATLAS, num_clusters = 7)
+plot_cell_clusters(ATLAS, 1, 2, color = "group",
+    markers = c("CDX2", "APOA1"))
