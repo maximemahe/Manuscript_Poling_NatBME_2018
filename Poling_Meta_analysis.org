@@ -101,7 +101,7 @@ dev.off()
 [[./Data/meta_analysis/PCA_500genes.png]]
 [[./Data/meta_analysis/PCA_2500genes.png]]
 [[./Data/meta_analysis/PCA_5000genes.png]]
-[[./Data/meta_analysis/PCA_1000genes.png]]
+[[./Data/meta_analysis/PCA_10000genes.png]]
 
 ** Top/Bottom loadings and GO analysis
 #+begin_src R :session *R* :eval yes :exports code :tangle ./src/pcaExplorer_analysis.R
@@ -136,3 +136,57 @@ head(goquick$PC1$negLoad)
 [[./Data/meta_analysis/Loadings_PC1.png]]
 [[./Data/meta_analysis/Loadings_PC2.png]]
 [[./Data/meta_analysis/Loadings_PC3.png]]
+
+** Top/Bottom loadings GO analysis
+#+begin_src R :session *R* :eval yes :exports code :tangle ./src/pcaExplorer_analysis.R
+#Compute limmaquickpca2go
+library(org.Hs.eg.db)
+goquick <- limmaquickpca2go(vsd,
+                                   pca_ngenes = 10000,
+                                   inputType = "SYMBOL",
+                                   organism = "Hs")
+
+head(goquick$PC1$posLoad)
+head(goquick$PC1$negLoad)
+#repeat for each PCs
+#+END_SRC
+
+| PC1-               |                                                    |     |          |   | PC1+               |                                              |     |          |
+|--------------------|----------------------------------------------------|-----|----------|---|--------------------|----------------------------------------------|-----|----------|
+| Biological Process | Term                                               | DE  | P.DE     |   | Biological Process | Term                                         | DE  | P.DE     |
+| GO:0032502         | developmental process                              | 236 | 9.43E-18 |   | GO:0006955         | immune response                              | 190 | 1.62E-72 |
+| GO:0048856         | anatomical structure development                   | 222 | 9.04E-17 |   | GO:0002376         | immune system process                        | 222 | 2.44E-70 |
+| GO:0044767         | single-organism developmental process              | 229 | 3.95E-16 |   | GO:0002682         | regulation of immune system process          | 142 | 5.44E-54 |
+| GO:0044707         | single-multicellular organism process              | 235 | 5.04E-15 |   | GO:0002684         | positive regulation of immune system process | 116 | 7.65E-51 |
+| GO:0048731         | system development                                 | 188 | 5.93E-15 |   | GO:0045321         | leukocyte activation                         | 129 | 8.11E-51 |
+| GO:0007275         | multicellular organism development                 | 204 | 7.65E-15 |   | GO:0050776         | regulation of immune response                | 111 | 1.24E-48 |
+| GO:0009653         | anatomical structure morphogenesis                 | 121 | 3.09E-14 |   | GO:0001775         | cell activation                              | 134 | 1.47E-48 |
+| GO:0030198         | extracellular matrix organization                  | 36  | 5.69E-14 |   | GO:0006952         | defense response                             | 140 | 8.90E-47 |
+| GO:0043062         | extracellular structure organization               | 36  | 6.29E-14 |   | GO:0046649         | lymphocyte activation                        | 89  | 9.65E-43 |
+| GO:0001501         | skeletal system development                        | 43  | 1.48E-12 |   | GO:0050778         | positive regulation of immune response       | 84  | 6.64E-37 |
+|                    |                                                    |     |          |   |                    |                                              |     |          |
+| PC2-               |                                                    |     |          |   | PC2+               |                                              |     |          |
+| Biological Process | Term                                               | DE  | P.DE     |   | Biological Process | Term                                         | DE  | P.DE     |
+| GO:0007586         | digestion                                          | 38  | 1.23E-25 |   | GO:0044707         | single-multicellular organism process        | 200 | 2.23E-11 |
+| GO:0044281         | small molecule metabolic process                   | 124 | 4.29E-23 |   | GO:0048856         | anatomical structure development             | 180 | 3.66E-10 |
+| GO:0044710         | single-organism metabolic process                  | 181 | 1.47E-17 |   | GO:0007275         | multicellular organism development           | 168 | 8.67E-10 |
+| GO:0006629         | lipid metabolic process                            | 87  | 3.28E-17 |   | GO:0044767         | single-organism developmental process        | 186 | 1.07E-09 |
+| GO:0006805         | xenobiotic metabolic process                       | 24  | 5.57E-17 |   | GO:0032502         | developmental process                        | 188 | 1.10E-09 |
+| GO:0006082         | organic acid metabolic process                     | 75  | 5.69E-17 |   | GO:0048731         | system development                           | 152 | 3.01E-09 |
+| GO:0071466         | cellular response to xenobiotic stimulus           | 24  | 1.44E-16 |   | GO:0032501         | multicellular organismal process             | 213 | 1.13E-08 |
+| GO:0043436         | oxoacid metabolic process                          | 73  | 3.07E-16 |   | GO:0051960         | regulation of nervous system development     | 43  | 1.39E-08 |
+| GO:0019752         | carboxylic acid metabolic process                  | 68  | 5.51E-16 |   | GO:0050919         | negative chemotaxis                          | 8   | 1.89E-08 |
+| GO:0009410         | response to xenobiotic stimulus                    | 24  | 5.53E-16 |   | GO:0007399         | nervous system development                   | 88  | 3.17E-08 |
+|                    |                                                    |     |          |   |                    |                                              |     |          |
+| PC3-               |                                                    |     |          |   | PC3+               |                                              |     |          |
+| Biological Process | Term                                               | DE  | P.DE     |   | Biological Process | Term                                         | DE  | P.DE     |
+| GO:0006334         | nucleosome assembly                                | 30  | 4.00E-20 |   | GO:0007586         | digestion                                    | 24  | 1.04E-11 |
+| GO:0031497         | chromatin assembly                                 | 30  | 1.18E-18 |   | GO:0051179         | localization                                 | 215 | 1.63E-10 |
+| GO:0006342         | chromatin silencing                                | 26  | 8.39E-18 |   | GO:0044710         | single-organism metabolic process            | 163 | 2.89E-10 |
+| GO:0006335         | DNA replication-dependent nucleosome assembly      | 16  | 9.16E-18 |   | GO:0044281         | small molecule metabolic process             | 96  | 4.63E-10 |
+| GO:0034723         | DNA replication-dependent nucleosome organization  | 16  | 9.16E-18 |   | GO:0050896         | response to stimulus                         | 270 | 9.19E-10 |
+| GO:0034728         | nucleosome organization                            | 30  | 9.43E-18 |   | GO:0044283         | small molecule biosynthetic process          | 39  | 9.56E-10 |
+| GO:0006333         | chromatin assembly or disassembly                  | 31  | 1.19E-17 |   | GO:0002376         | immune system process                        | 115 | 2.04E-09 |
+| GO:0045814         | negative regulation of gene expression, epigenetic | 26  | 2.56E-16 |   | GO:1901615         | organic hydroxy compound metabolic process   | 36  | 3.94E-09 |
+| GO:0000183         | chromatin silencing at rDNA                        | 16  | 4.88E-16 |   | GO:0045047         | protein targeting to ER                      | 16  | 6.19E-09 |
+| GO:0006323         | DNA packaging                                      | 30  | 5.86E-16 |   | GO:0061621         | canonical glycolysis                         | 9   | 7.16E-09 |

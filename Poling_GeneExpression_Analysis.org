@@ -171,6 +171,60 @@ head(goquick$PC1$negLoad)
 [[./Data/gene_analysis/Loadings_PC2.png]]
 [[./Data/gene_analysis/Loadings_PC3.png]]
 
+** Top/Bottom loadings GO analysis
+#+begin_src R :session *R* :eval yes :exports code :tangle ./src/Gene_expression_analysis.R
+#Compute limmaquickpca2go
+library(org.Hs.eg.db)
+goquick <- limmaquickpca2go(rld,
+                                   pca_ngenes = 10000,
+                                   inputType = "SYMBOL",
+                                   organism = "Hs")
+
+head(goquick$PC1$posLoad)
+head(goquick$PC1$negLoad)
+#repeat for each PCs
+#+END_SRC
+
+| PC1-               |                                                                     |     |          |   | PC1+               |                                                |     |          |
+|--------------------|---------------------------------------------------------------------|-----|----------|---|--------------------|------------------------------------------------|-----|----------|
+| Biological Process | Term                                                                | DE  | P.DE     |   | Biological Process | Term                                           | DE  | P.DE     |
+| GO:0030198         | extracellular matrix organization                                   | 59  | 4.38E-34 |   | GO:0006955         | immune response                                | 197 | 4.10E-74 |
+| GO:0043062         | extracellular structure organization                                | 59  | 5.29E-34 |   | GO:0002376         | immune system process                          | 232 | 4.58E-73 |
+| GO:0048731         | system development                                                  | 215 | 1.02E-25 |   | GO:0002682         | regulation of immune system process            | 151 | 2.65E-58 |
+| GO:0048856         | anatomical structure development                                    | 243 | 3.85E-25 |   | GO:0002684         | positive regulation of immune system process   | 123 | 1.70E-54 |
+| GO:0032502         | developmental process                                               | 254 | 5.24E-25 |   | GO:0045321         | leukocyte activation                           | 136 | 7.30E-54 |
+| GO:0007275         | multicellular organism development                                  | 230 | 6.10E-25 |   | GO:0001775         | cell activation                                | 143 | 7.63E-53 |
+| GO:0044767         | single-organism developmental process                               | 250 | 2.60E-24 |   | GO:0006952         | defense response                               | 151 | 3.48E-52 |
+| GO:0009653         | anatomical structure morphogenesis                                  | 141 | 5.01E-23 |   | GO:0046649         | lymphocyte activation                          | 101 | 5.82E-52 |
+| GO:0044707         | single-multicellular organism process                               | 256 | 6.63E-23 |   | GO:0050776         | regulation of immune response                  | 115 | 8.93E-50 |
+| GO:0030574         | collagen catabolic process                                          | 24  | 1.04E-21 |   | GO:0042110         | T cell activation                              | 78  | 6.74E-42 |
+|                    |                                                                     |     |          |   |                    |                                                |     |          |
+| PC2-               |                                                                     |     |          |   | PC2+               |                                                |     |          |
+| Biological Process | Term                                                                | DE  | P.DE     |   | Biological Process | Term                                           | DE  | P.DE     |
+| GO:0002376         | immune system process                                               | 156 | 5.12E-24 |   | GO:0007586         | digestion                                      | 38  | 2.58E-25 |
+| GO:0006955         | immune response                                                     | 123 | 7.11E-23 |   | GO:0006811         | ion transport                                  | 95  | 8.16E-17 |
+| GO:0007155         | cell adhesion                                                       | 101 | 9.85E-23 |   | GO:0006629         | lipid metabolic process                        | 87  | 1.21E-16 |
+| GO:0022610         | biological adhesion                                                 | 101 | 1.48E-22 |   | GO:0015711         | organic anion transport                        | 46  | 2.15E-16 |
+| GO:0006952         | defense response                                                    | 102 | 4.85E-20 |   | GO:0044281         | small molecule metabolic process               | 110 | 9.75E-16 |
+| GO:0044707         | single-multicellular organism process                               | 253 | 1.12E-19 |   | GO:0006820         | anion transport                                | 51  | 6.11E-15 |
+| GO:0045321         | leukocyte activation                                                | 87  | 1.85E-19 |   | GO:0022600         | digestive system process                       | 21  | 1.16E-14 |
+| GO:0001775         | cell activation                                                     | 92  | 1.31E-18 |   | GO:0006641         | triglyceride metabolic process                 | 22  | 1.88E-14 |
+| GO:0002682         | regulation of immune system process                                 | 91  | 1.36E-17 |   | GO:0044710         | single-organism metabolic process              | 172 | 2.18E-13 |
+| GO:0050896         | response to stimulus                                                | 305 | 1.71E-17 |   | GO:0006639         | acylglycerol metabolic process                 | 22  | 3.51E-13 |
+|                    |                                                                     |     |          |   |                    |                                                |     |          |
+| PC3-               |                                                                     |     |          |   | PC3+               |                                                |     |          |
+| Biological Process | Term                                                                | DE  | P.DE     |   | Biological Process | Term                                           | DE  | P.DE     |
+| GO:0006614         | SRP-dependent cotranslational protein targeting to membrane         | 20  | 5.78E-14 |   | GO:0044707         | single-multicellular organism process          | 256 | 2.29E-22 |
+| GO:0006613         | cotranslational protein targeting to membrane                       | 20  | 1.71E-13 |   | GO:0032501         | multicellular organismal process               | 273 | 8.34E-19 |
+| GO:0045047         | protein targeting to ER                                             | 20  | 3.87E-13 |   | GO:0044767         | single-organism developmental process          | 226 | 7.29E-15 |
+| GO:0070972         | protein localization to endoplasmic reticulum                       | 22  | 4.74E-13 |   | GO:0032502         | developmental process                          | 228 | 9.51E-15 |
+| GO:0072599         | establishment of protein localization to endoplasmic reticulum      | 20  | 8.42E-13 |   | GO:0048731         | system development                             | 188 | 9.78E-15 |
+| GO:0000184         | nuclear-transcribed mRNA catabolic process, nonsense-mediated decay | 20  | 1.15E-11 |   | GO:0048856         | anatomical structure development               | 215 | 3.57E-14 |
+| GO:0006413         | translational initiation                                            | 22  | 1.23E-09 |   | GO:0007275         | multicellular organism development             | 202 | 5.84E-14 |
+| GO:0019083         | viral transcription                                                 | 21  | 1.33E-09 |   | GO:0051179         | localization                                   | 230 | 8.16E-14 |
+| GO:0044270         | cellular nitrogen compound catabolic process                        | 33  | 1.49E-09 |   | GO:0045055         | regulated exocytosis                           | 57  | 1.18E-13 |
+| GO:0006612         | protein targeting to membrane                                       | 21  | 2.26E-09 |   | GO:0051239         | regulation of multicellular organismal process | 126 | 7.64E-13 |
+
 ** GO Plot analysis
 *** (http://wencke.github.io/)
 **** Pathways enriched in tHIO+S compared to tHIO
