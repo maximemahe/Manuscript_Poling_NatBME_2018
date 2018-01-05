@@ -14,10 +14,9 @@ Fetal <- grep("Fetal",colnames(count),ignore.case=T)
 Transplanted <- grep("Transplant",colnames(count),ignore.case=T)
 Spring <- grep("Spring",colnames(count),ignore.case=T)
 Child <- grep("Child",colnames(count),ignore.case=T)
-HIO_H9 <- grep("H9",colnames(count),ignore.case=T)
-HIO_H1 <- grep("H1_HIO",colnames(count),ignore.case=F)
+HIO_H1 <- grep("HIO_H1",colnames(count),ignore.case=F)
 
-group <- as.factor(c(rep("tHIO+S",times=length(Spring)), rep("tHIO",times=length(Transplanted)),rep("HIO_H9",times=length(HIO_H9)), rep("HIO_H1",times=length(HIO_H1)),rep("Fetal",times=length(Fetal)),rep("Infant",times=length(Infant)),rep("Child",times=length(Child)),rep("Adult",times=length(Adult))))
+group <- as.factor(c(rep("tHIO+S",times=length(Spring)), rep("tHIO",times=length(Transplanted)), rep("HIO_H1",times=length(HIO_H1)),rep("Fetal",times=length(Fetal)),rep("Infant",times=length(Infant)),rep("Child",times=length(Child)),rep("Adult",times=length(Adult))))
 pheno = read.table("pheno.txt", header=T, row.names = 1, sep="\t")
 
 #Create Large DGEList
@@ -33,6 +32,7 @@ vsd = vst(dds, blind=FALSE, fitType = "parametric") #Variance Stabilization Tran
 dds <- DESeq(dds)
 res <- results(dds)
 annotation <- data.frame(gene_name = rownames(dds), row.names = rownames(dds), stringsAsFactors = FALSE)
+#Lunch Shinny app #pcaExplorer(dds = dds, rlt = vsd, annotation = annotation)
 
 #Compute PCA
 pcaobj <- prcomp(t(assay(vsd))) #Use VST
@@ -166,9 +166,51 @@ stat_function(fun = dnorm, size = 0.5, color = 'red') +
 xlab("Standardized log(Counts)") +
 ylab("Density")
 
+disp_table <- dispersionTable(ATLAS)
+unsup_clustering_genes <- subset(disp_table, mean_expression >= 1)
+ATLAS <- setOrderingFilter(ATLAS, unsup_clustering_genes$gene_id)
+plot_ordering_genes(ATLAS)
+
+ATLAS <- reduceDimension(ATLAS, max_components = 2, num_dim = 2,
+            reduction_method = 'tSNE',
+            residualModelFormulaStr = "~type + num_genes_expressed",
+            verbose = T)
+
+
+*************************************************
+SEURAT
+
+nbt.data=read.table("combat.txt",sep="\t",header=TRUE,row.names=1)
+nbt.data=log(nbt.data+1)
+corner(nbt.data)
+nbt=new("seurat",raw.data=nbt.data)
+nbt=setup(nbt,project="NBT",min.cells = 1,names.field = 2,names.delim = "_",min.genes = 1000,is.expr=0.5,)
+nbt=mean.var.plot(nbt,y.cutoff = 0.1,x.low.cutoff = 0.1,fxn.x = expMean,fxn.y = logVarDivMean)
+length(nbt@var.genes)
+nbt=pca(nbt,do.print=FALSE)
+pca.plot(nbt,1,2,pt.size = 2)
+
+viz.pca(nbt,1:2)
+pcHeatmap(nbt,pc.use = 1,do.balanced = FALSE)
+
+nbt=jackStraw(nbt,num.replicate = 200,do.print = FALSE)
+jackStrawPlot(nbt,PCs = 1:12)
+
+nbt=project.pca(nbt,do.print=FALSE)
+pcHeatmap(nbt,pc.use = 1,use.full = TRUE,do.balanced = TRUE,remove.key = TRUE)
+
+nbt.sig.genes=pca.sig.genes(nbt,1:5,pval.cut = 1e-4,max.per.pc = 200)
+length(nbt.sig.genes)
+nbt=pca(nbt,pc.genes=nbt.sig.genes,do.print = FALSE)
+nbt=jackStraw(nbt,num.replicate = 200,do.print = FALSE)
+jackStrawPlot(nbt,PCs = 1:15)
+
+nbt=run_tsne(nbt,dims.use = 1:5,max_iter=2000)
+tsne.plot(nbt,pt.size = 4) #Run on PCs
 
 
 
+*****
 LGR5_id <- row.names(subset(fData(ATLAS), gene_short_name == "LGR5"))
 OLFM4_id <- row.names(subset(fData(ATLAS), gene_short_name == "OLFM4"))
 
@@ -238,6 +280,103 @@ plot_ordering_genes(ATLAS)
 
 ATLAS <- reduceDimension(ATLAS, max_components = 2, num_dim = 6,
                 reduction_method = 'tSNE', verbose = T)
-ATLAS <- clusterCells(ATLAS, num_clusters = 7)
+ATLAS <- clusterCells(ATLAS, num_clusters = 8)
 plot_cell_clusters(ATLAS, 1, 2, color = "group",
     markers = c("CDX2", "APOA1"))
+
+
+#######################################################################################
+
+count = read.table("combat_data.txt", header=T, row.names = 1, sep="\t")
+> #Group setup
+> Adult <- grep("Adult",colnames(count),ignore.case=T)
+> Infant <- grep("Infant",colnames(count),ignore.case=T)
+> Fetal <- grep("Fetal",colnames(count),ignore.case=T)
+> Transplanted <- grep("Transplant",colnames(count),ignore.case=T)
+> Spring <- grep("Spring",colnames(count),ignore.case=T)
+> Child <- grep("Child",colnames(count),ignore.case=T)
+> HIO_H1 <- grep("HIO_H1",colnames(count),ignore.case=F)
+>
+> group <- as.factor(c(rep("tHIO+S",times=length(Spring)), rep("tHIO",times=length(Transplanted)), rep("HIO_H1",times=length(HIO_H1)),rep("Fetal",times=length(Fetal)),rep("Infant",times=length(Infant)),rep("Child",times=length(Child)),rep("Adult",times=length(Adult))))
+> pheno = read.table("pheno.txt", header=T, row.names = 1, sep="\t")
+> pca <- prcomp(t(count),scale=TRUE,center=TRUE)
+> scores <- data.frame(colnames(count), pca$x[,1:ncol(pca$x)],group)
+> theme <- theme(legend.position="bottom",
++                legend.title=element_blank(),
++                legend.background = element_rect(fill="white", size=.5, linetype="dotted"),
++                panel.background = element_rect(fill = "white", colour = "black"),
++                panel.grid.minor=element_blank(),
++                panel.grid.major=element_blank())
+> qplot(x=PC1, y=PC2, data=scores) +
++     theme +
++     scale_fill_manual(values=c("#F5EA14", "#FBF7C9", "#8A4B9C", "#E5CBE2")) +
++     geom_point(shape=21,aes(fill=factor(group)), size=5)  +
++     xlim(-150, 150) +
++     ylim(-150, 150) +
++     labs(x = "PC1 (36.14%)", y = "PC2 (17.33%)")
+Error: Insufficient values in manual scale. 7 needed but only 4 provided.
+> qplot(x=PC1, y=PC2, data=scores) +
++     theme +
++     scale_fill_manual(values=c("#F5EA14", "#FBF7C9", "#8A4B9C", "#E5CBE2", "#F5EA14", "#FBF7C9", "#8A4B9C", "#E5CBE2")) +
++     geom_point(shape=21,aes(fill=factor(group)), size=5)  +
++     xlim(-150, 150) +
++     ylim(-150, 150) +
++     labs(x = "PC1 (36.14%)", y = "PC2 (17.33%)")
+
+** Expression to Zscore
+#Converts expression value of a gene in each sample to z-score based on expression across the samples
+file <- data
+data <- as.matrix(read.table("normalized_counstable",sep="\t",header=T,row.names=1))
+cat("\n")
+head(data)
+zscore_data <- c()
+for(i in 1:nrow(data))
+{
+  mean_row <- mean(as.numeric(data[i,]),na.rm=TRUE)
+  sd_row <- sd(as.numeric(data[i,]),na.rm=TRUE)
+  zscore_row <- c()
+  for(j in 1:ncol(data))
+  {
+   zscore_each <- ((data[i,j]-mean_row)/sd_row)
+   zscore_row <-append(zscore_row,zscore_each)
+  }
+  zscore_data<-rbind(zscore_data,zscore_row)
+  Sys.sleep(0.00005)
+  cat(paste0("Zscore Calculations for Gene: ", i, " Completed", sep="\r"))
+}
+col <- cbind(row.names(data),zscore_data)
+write.table(col,"zscore_data.txt",sep="\t",row.names=F,quote=F)
+
+#Plot PCA
+data = read.table("zscore_data.txt", header=T, row.names = 1, sep="\t")
+
+#Group setup
+Adult <- grep("Adult",colnames(data),ignore.case=T)
+Infant <- grep("Infant",colnames(data),ignore.case=T)
+Fetal <- grep("Fetal",colnames(data),ignore.case=T)
+Transplanted <- grep("Transplant",colnames(data),ignore.case=T)
+Spring <- grep("Spring",colnames(data),ignore.case=T)
+Child <- grep("Child",colnames(data),ignore.case=T)
+HIO_H1 <- grep("HIO_H1",colnames(data),ignore.case=F)
+
+group <- as.factor(c(rep("tHIO+S",times=length(Spring)), rep("tHIO",times=length(Transplanted)), rep("HIO_H1",times=length(HIO_H1)),rep("Fetal",times=length(Fetal)),rep("Infant",times=length(Infant)),rep("Child",times=length(Child)),rep("Adult",times=length(Adult))))
+pheno = read.table("pheno_combat.txt", header=T, row.names = 1, sep="\t")
+pca <- prcomp(t(data),scale=TRUE,center=TRUE)
+scores <- data.frame(colnames(data), pca$x[,1:ncol(pca$x)],group)
+theme <- theme(legend.position="bottom",
+              legend.title=element_blank(),
+              legend.background = element_rect(fill="white", size=.5, linetype="dotted"),
+              panel.background = element_rect(fill = "white", colour = "black"),
+              panel.grid.minor=element_blank(),
+              panel.grid.major=element_blank())
+
+#Get proportion of variance explained per component
+summary(pca) #Add PC1 and PC2 proportion of variance explained to PCA axis titles
+
+qplot(x=PC1, y=PC2, data=scores) +
+     theme +
+     scale_fill_manual(values=c("#F5EA14", "#FBF7C9", "#8A4B9C", "#E5CBE2", "#F5EA14", "#FBF7C9", "#8A4B9C", "#E5CBE2")) +
+     geom_point(shape=21,aes(fill=factor(group)), size=5)  +
+     xlim(-150, 150) +
+     ylim(-150, 150) +
+     labs(x = "PC1 (36.14%)", y = "PC2 (17.33%)")

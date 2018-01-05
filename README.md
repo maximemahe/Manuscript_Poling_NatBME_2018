@@ -31,8 +31,9 @@ In both directing and fostering the natural ability of stem cells to self-organi
 This repository contains the following sections :
  - [RNA sequencing and bioinformatic methods](Poling_Methods.org)
  - [Analysis of RNA-seq data](Poling_GeneExpression_Analysis.org)
- - [Meta-analysis of RNA-seq data with publicly available datasets](Poling_Meta_analysis.org)
-
+ - Meta-analysis of RNA-seq data with publicly available datasets
+      - [Primary analysis with pcaExplorer](Poling_Meta_analysis.org)
+      - [Additional analysis with CSBB and t-SNE](Poling_Additional_analysis.org)
 ----------
 
 **About this repository**

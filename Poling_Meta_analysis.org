@@ -1,5 +1,5 @@
 * Meta-analysis
-
+*** (https://github.com/federicomarini/pcaExplorer)
 ** PCA analysis
 #+begin_src R :session *R* :eval yes :exports code :tangle ./src/pcaExplorer_analysis.R
 #Used packages
@@ -110,15 +110,15 @@ dev.off()
         topN), rep("#2E368E", topN)), main = paste0(title, "PC",
         whichpc))
 #Plot and export image for PC1
-png('Loadings_PC1.png', width = 800, height = 400)
+png('Loadings_PC1.png', width = 800, height = 350)
 hi_loadings(pcaobj, whichpc = 1, topN = 10,annotation = annotation)
 dev.off()
 #Plot and export image for PC2
-png('Loadings_PC2.png', width = 800, height = 400)
+png('Loadings_PC2.png', width = 800, height = 350)
 hi_loadings(pcaobj, whichpc = 2, topN = 10,annotation = annotation)
 dev.off()
 #Plot and export image for PC3
-png('Loadings_PC3.png', width = 800, height = 400)
+png('Loadings_PC3.png', width = 800, height = 350)
 hi_loadings(pcaobj, whichpc = 3, topN = 10,annotation = annotation)
 dev.off()
 
