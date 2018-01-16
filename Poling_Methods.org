@@ -1,5 +1,6 @@
-* RNA sequencing bioinformatics
+[Home](README.md)
 
+* RNA sequencing bioinformatics
 ** Pre-processing
 
 Data pre-processing was performed in Galaxy public server (https://usegalaxy.org). fastq datasets were encoded in Phred+33 to fastqsanger under the attributes for each dataset (FASTQ Groomer, Galaxy v1.0.4). Read quality was assessed using FastQC (Galaxy, v0.67). Adapter and low quality (< 20) sequences were removed using Trimmomatic (SLIDINGWINDOW) (Galaxy v0.32.3). Reads were mapped against the human genome GRCh37\Hg19 using Tophat2/Bowtie2 with default settings (Galaxy v2.1.0). The number of reads uniquely mapping to each gene was counted using featureCounts (Galaxy v1.4.6.p5) using the Illumina iGenomes annotation file.
