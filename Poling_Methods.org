@@ -1,5 +1,3 @@
-[Home](README.md)
-
 * RNA sequencing bioinformatics
 ** Pre-processing
 

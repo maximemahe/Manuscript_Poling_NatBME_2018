@@ -1,5 +1,3 @@
-[Home](README.md)
-
 * Meta-analysis
 *** (https://github.com/federicomarini/pcaExplorer)
 ** PCA analysis

@@ -1,5 +1,3 @@
-[Home](README.md)
-
 * Aditional analysis
 ** ComBat correction and PCA analysis
 #+begin_src R :session *R* :eval yes :exports code :tangle ./src/ComBat.R
